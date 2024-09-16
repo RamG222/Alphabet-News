@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "970490924286",
+    "project_id": "alphabet-news-20a6a",
+    "storage_bucket": "alphabet-news-20a6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970490924286:android:08e10cbce78a2a3e5929af",
+        "android_client_info": {
+          "package_name": "com.stormsofts.alphabetnews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB85O4ve4KKgw-JycjimoeLxLTV0BL7eVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
