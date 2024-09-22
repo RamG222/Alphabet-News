@@ -65,7 +65,7 @@ Future initNotifications() async {
     );
   });
 }
-
+  
 //function for firebase and asking for persmission of notifications,
 void setupPushNotifications() async {
   final fcm = FirebaseMessaging.instance;

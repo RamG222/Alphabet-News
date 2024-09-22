@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (horizontalList[int.parse(_selectedTabIndex)].id == "1") {
         setState(() {
           apiUrl =
-              'https://alphabetapp.in/api/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=1&page=$pagination';
+              'https://alphabetapp.in/api/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=$cityIdString&page=$pagination';
         });
       } else {
         setState(() {
@@ -234,8 +234,28 @@ class _HomeScreenState extends State<HomeScreen> {
         }).toList());
       }
 
-      carouselNewsList =
-          mainNewsList.length > 5 ? mainNewsList.sublist(0, 5) : mainNewsList;
+      // carouselNewsList =
+      //     mainNewsList.length > 5 ? mainNewsList.sublist(0, 5) : mainNewsList;
+    });
+
+    final response_featured =
+        await dio.get('https://alphabetapp.in/api/display_slider.php');
+    setState(() {
+      final apifeaturedData = response_featured.data['data'] as List;
+
+      carouselNewsList = apifeaturedData.map((item) {
+        return NewsModel(
+          item['NSID'],
+          item['News_Head'],
+          item['News_Image'],
+          item['News_Link'],
+          item[
+              'NSID'], // Assuming you want to pass the same value multiple times
+          item[
+              'NSID'], // If these are supposed to be different values, use appropriate keys
+          item['NSID'],
+        );
+      }).toList(); // Convert the Iterable to a List
     });
 
     getAds();
