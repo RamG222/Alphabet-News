@@ -1,84 +1,187 @@
-@pragma('vm:entry-point')
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:alphabet/screens/view_news.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
-final _localNotifications = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin _localNotifications =
+    FlutterLocalNotificationsPlugin();
 
-//this function is used for handleing background notifications for Android,
-Future<void> handleBackgroudMessage(RemoteMessage message) async {
-  print('Title: ${message.notification?.title}');
-  print('Body: ${message.notification?.body}');
-  print('PayLoad: ${message.data}');
+final AndroidNotificationChannel androidChannel =
+    const AndroidNotificationChannel(
+  'high_importance_channel',
+  'High Importance Notifications',
+  description: 'This channel is used for important notifications',
+  importance: Importance.high,
+);
+
+// Main function to run the app
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupPushNotifications();
+  runApp(MyApp());
 }
 
-final androidchannel = const AndroidNotificationChannel(
-    'high_importance_channel', 'High Importance Notifications',
-    description: 'This channel is used for important notification ',
-    importance: Importance.defaultImportance);
-
-    
-// Function for Sending to selected page from notifications
-void handleMessage(RemoteMessage? message) {
-  if (message == null) {
-    return;
+// Flutter app widget
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Push Notifications Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
   }
 }
 
-Future initLocalNotification() async {
-  const android = AndroidInitializationSettings('@drawable/ic_launcher');
-  const iOS = DarwinInitializationSettings();
-  const settings = InitializationSettings(android: android, iOS: iOS);
+// Home page widget
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    initLocalNotification();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Push Notifications'),
+      ),
+      body: Center(
+        child: Text('Listen for notifications!'),
+      ),
+    );
+  }
+}
+
+// Function to handle background messages
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  print('Background Message: ${message.notification?.title}');
+}
+
+// Function for handling notifications
+void handleMessage(RemoteMessage? message) {
+  if (message == null) return;
+  // Implement navigation logic if needed
+
+  final data = message.data;
+  ViewNewsScreen(url: data["news_url"]);
+}
+
+// Initialization of local notifications
+Future<void> initLocalNotification() async {
+  const AndroidInitializationSettings android =
+      AndroidInitializationSettings('@drawable/ic_launcher');
+  const DarwinInitializationSettings iOS = DarwinInitializationSettings();
+  const InitializationSettings settings =
+      InitializationSettings(android: android, iOS: iOS);
+
   await _localNotifications.initialize(settings,
       onDidReceiveNotificationResponse: (payload) {
     final message = RemoteMessage.fromMap(jsonDecode(payload as String));
     handleMessage(message);
   });
+
   final platform = _localNotifications.resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>();
-  await platform?.createNotificationChannel(androidchannel);
+  await platform?.createNotificationChannel(androidChannel);
 }
 
-Future initNotifications() async {
+// Function to show notification with image
+Future<void> _showNotificationWithImage(RemoteMessage message) async {
+  final notification = message.notification;
+  if (notification == null) return;
+
+  final imageUrl = message.data['image_url'];
+  print('Notification Title: ${notification.title}');
+  print('Notification Body: ${notification.body}');
+  print('Image URL: $imageUrl');
+
+  Uint8List? bigPicture;
+  if (imageUrl != null) {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+      print('Response status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        bigPicture = response.bodyBytes;
+        print('Fetched Image Size: ${bigPicture.length}');
+      } else {
+        print('Failed to fetch image. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching notification image: $e');
+    }
+  }
+
+  BigPictureStyleInformation bigPictureStyle;
+  if (bigPicture != null) {
+    bigPictureStyle = BigPictureStyleInformation(
+      ByteArrayAndroidBitmap(bigPicture),
+      contentTitle: notification.title,
+      summaryText: notification.body,
+    );
+  } else {
+    bigPictureStyle = BigPictureStyleInformation(
+      DrawableResourceAndroidBitmap('@drawable/ic_launcher'), // Fallback image
+      contentTitle: notification.title,
+      summaryText: notification.body,
+    );
+  }
+
+  _localNotifications.show(
+    notification.hashCode,
+    notification.title,
+    notification.body,
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidChannel.id,
+        androidChannel.name,
+        channelDescription: androidChannel.description,
+        importance: Importance.high,
+        styleInformation: bigPictureStyle,
+      ),
+    ),
+    payload: jsonEncode(message.toMap()),
+  );
+}
+
+// Setup Firebase for push notifications and permissions
+void setupPushNotifications() async {
+  final fcm = FirebaseMessaging.instance;
+
+  await fcm.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  final token = await fcm.getToken();
+  print("FCM Token: $token");
+  fcm.subscribeToTopic("ALL");
+
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+  initNotifications();
+  initLocalNotification();
+}
+
+// Initialization of Firebase Notifications
+Future<void> initNotifications() async {
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true, badge: true, sound: true);
 
   FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
   FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-  FirebaseMessaging.onBackgroundMessage(handleBackgroudMessage);
   FirebaseMessaging.onMessage.listen((message) {
-    final notification = message.notification;
-    if (notification == null) {
-      return;
-    }
-
-    _localNotifications.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          androidchannel.id,
-          androidchannel.name,
-          channelDescription: androidchannel.description,
-        ),
-      ),
-      payload: jsonEncode(message.toMap()),
-    );
+    _showNotificationWithImage(message);
   });
-}
-  
-//function for firebase and asking for persmission of notifications,
-void setupPushNotifications() async {
-  final fcm = FirebaseMessaging.instance;
-
-  await fcm.requestPermission();
-  final token = await fcm.getToken();
-  print("Token : $token");
-
-  fcm.subscribeToTopic("ALL");
-
-  FirebaseMessaging.onBackgroundMessage(handleBackgroudMessage);
-  initNotifications();
-  initLocalNotification();
 }

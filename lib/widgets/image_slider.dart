@@ -28,7 +28,6 @@ class image_slider extends StatelessWidget {
               onTap: () {
                 Get.to(ViewNewsScreen(
                   url: newsItem.newsURL,
-                  title: newsItem.title,
                 ));
               },
               child: Stack(

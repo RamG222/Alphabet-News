@@ -6,9 +6,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 WebViewController controller = WebViewController();
 
 class ViewNewsScreen extends StatefulWidget {
-  const ViewNewsScreen({super.key, required this.url, required this.title});
+  const ViewNewsScreen({super.key, required this.url});
   final String url;
-  final String title;
 
   @override
   State<ViewNewsScreen> createState() => _ViewNewsScreenState();

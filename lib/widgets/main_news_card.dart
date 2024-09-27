@@ -23,7 +23,6 @@ class main_news_card extends StatelessWidget {
         onTap: () {
           Get.to(ViewNewsScreen(
             url: data.newsURL,
-            title: data.title,
           ));
         },
         child: Padding(
