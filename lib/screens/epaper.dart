@@ -1,6 +1,8 @@
 import 'package:alphabet/models/epaper_model.dart';
+import 'package:alphabet/screens/view_news.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String? d1ID;
@@ -27,17 +29,19 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
 
   void getSharedPrefData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(seconds: 1));
 
     setState(() {
-      d1ID = pref.getString('distric1');
-      d2ID = pref.getString('distric2');
+      d1ID = pref.getString('district1');
+      d2ID = pref.getString('district2');
     });
     String combinedIDs;
+    print('d1ID: $d1ID, d2ID: $d2ID');
 
     if (d2ID != null && d2ID!.isNotEmpty) {
-      combinedIDs = '${d1ID ?? ''},${d2ID}';
+      combinedIDs = '${d1ID ?? 'null'},${d2ID}';
     } else {
-      combinedIDs = d1ID ?? '';
+      combinedIDs = d1ID ?? 'null2';
     }
 
     // Optionally store or use the combinedIDs string as needed
@@ -48,19 +52,21 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
   }
 
   void getAPIData() async {
+    print('DistIDString' + DistIdString.toString());
     var response = await _dio
         .get('https://alphabetapp.in/api/display_epaper.php?did=$DistIdString');
 
     var epaperData = response.data['data'] as List;
+    print(epaperData);
 
     setState(() {
       epaperList = epaperData.map((item) {
         return EpaperModel(
-          id: item['NEID'],
-          name: item['Paper_Name'],
-          url: item['Epaper_Link'],
-          logo: item['Logo'],
-        );
+            id: item['NEID'],
+            name: item['Paper_Name'],
+            url: item['Epaper_Link'],
+            logo: item['Logo'],
+            epaperLink: item['Epaper_Link']);
       }).toList();
     });
   }
@@ -69,14 +75,47 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 232, 231, 231),
+      appBar: AppBar(title: Text('E-Paper')),
       body: SafeArea(
-          child: ListView.builder(
-        itemCount: epaperList.length,
-        itemBuilder: (context, index) {
-          var _data = epaperList[index];
-          return Container();
-        },
-      )),
+        child: epaperList.isEmpty
+            ? Center(child: CircularProgressIndicator()) // Loading indicator
+            : ListView.builder(
+                itemCount: epaperList.length,
+                itemBuilder: (context, index) {
+                  var _data = epaperList[index];
+                  return InkWell(
+                    onTap: () {
+                      Get.to(() => ViewNewsScreen(url: _data.epaperLink));
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            _data.logo.toString(),
+                            height: 70,
+                            width: 80,
+                            fit: BoxFit.fill,
+                          ),
+                        ), // Use logo instead of url for the image
+                        SizedBox(width: 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _data.name,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('Read News by clicking here'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+      ),
     );
   }
 }
