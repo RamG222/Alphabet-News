@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:alphabet/screens/view_news.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 final FlutterLocalNotificationsPlugin _localNotifications =
@@ -17,65 +17,23 @@ final AndroidNotificationChannel androidChannel =
   importance: Importance.high,
 );
 
-// Main function to run the app
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  setupPushNotifications();
-  runApp(MyApp());
-}
+// Setup Firebase for push notifications and permissions
+Future<void> setupPushNotifications() async {
+  final fcm = FirebaseMessaging.instance;
 
-// Flutter app widget
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Push Notifications Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
+  await fcm.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
-// Home page widget
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+  final token = await fcm.getToken();
+  print("FCM Token: $token");
+  fcm.subscribeToTopic("ALL");
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    initLocalNotification();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Push Notifications'),
-      ),
-      body: Center(
-        child: Text('Listen for notifications!'),
-      ),
-    );
-  }
-}
-
-// Function to handle background messages
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('Background Message: ${message.notification?.title}');
-}
-
-// Function for handling notifications
-void handleMessage(RemoteMessage? message) {
-  if (message == null) return;
-  // Implement navigation logic if needed
-
-  final data = message.data;
-  ViewNewsScreen(url: data["news_url"]);
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+  initNotifications();
+  initLocalNotification();
 }
 
 // Initialization of local notifications
@@ -97,6 +55,19 @@ Future<void> initLocalNotification() async {
   await platform?.createNotificationChannel(androidChannel);
 }
 
+// Function to handle background messages
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  print('Background Message: ${message.notification?.title}');
+}
+
+// Function for handling notifications
+void handleMessage(RemoteMessage? message) {
+  if (message == null) return;
+
+  final data = message.data;
+  Get.off(ViewNewsScreen(url: data["news_url"]));
+}
+
 // Function to show notification with image
 Future<void> _showNotificationWithImage(RemoteMessage message) async {
   final notification = message.notification;
@@ -111,10 +82,8 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
   if (imageUrl != null) {
     try {
       final response = await http.get(Uri.parse(imageUrl));
-      print('Response status: ${response.statusCode}');
       if (response.statusCode == 200) {
         bigPicture = response.bodyBytes;
-        print('Fetched Image Size: ${bigPicture.length}');
       } else {
         print('Failed to fetch image. Status code: ${response.statusCode}');
       }
@@ -155,26 +124,7 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
   );
 }
 
-// Setup Firebase for push notifications and permissions
-void setupPushNotifications() async {
-  final fcm = FirebaseMessaging.instance;
-
-  await fcm.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  final token = await fcm.getToken();
-  print("FCM Token: $token");
-  fcm.subscribeToTopic("ALL");
-
-  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-  initNotifications();
-  initLocalNotification();
-}
-
-// Initialization of Firebase Notifications
+// Firebase Messaging Initialization
 Future<void> initNotifications() async {
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true, badge: true, sound: true);

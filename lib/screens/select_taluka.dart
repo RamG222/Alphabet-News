@@ -1,10 +1,8 @@
 import 'package:alphabet/models/taluka_model.dart';
-import 'package:alphabet/screens/home/homepage_navigator.dart';
-import 'package:alphabet/screens/select_district.dart';
 import 'package:alphabet/widgets/more_screen_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _dio = Dio();
@@ -156,23 +154,28 @@ class _SelectTalukaScreenState extends State<SelectTalukaScreen> {
               onPressed: () async {
                 SharedPreferences pref = await SharedPreferences.getInstance();
 
+                // Remove any previously stored Taluka IDs if fewer than 5 are selected
+                for (int i = selectedTalukas.length; i < 5; i++) {
+                  setState(() {
+                    pref.remove('t${i + 1}ID');
+                    pref.remove('t${i + 1}Name');
+                  });
+                }
+
                 pref.setString('isDistrictAndTalukaSelected', 'true');
-                pref.setString('district1', select1!.id);
-                pref.setString('district2', select2!.id);
+                pref.setString('district1', widget.district1);
+                if (widget.district2 != null) {
+                  pref.setString('district2', widget.district2!);
+                } else {
+                  pref.remove('district2');
+                }
 
                 for (int i = 0; i < selectedTalukas.length; i++) {
                   pref.setString('t${i + 1}ID', selectedTalukas[i].id);
                   pref.setString('t${i + 1}Name', selectedTalukas[i].name);
                 }
-
-                for (int i = selectedTalukas.length; i < 5; i++) {
-                  pref.remove('t${i + 1}ID');
-                  pref.remove('t${i + 1}Name');
-                }
-
-                Get.offAll(
-                  const HomepageNavigator(),
-                );
+                //Restarting app for the changes to take effect
+                Restart.restartApp();
               },
               iconWidget: Icon(null),
               label: 'Finish'),

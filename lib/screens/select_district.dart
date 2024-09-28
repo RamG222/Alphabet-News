@@ -149,17 +149,19 @@ class _SelectDistrictScreenState extends State<SelectDistrictScreen> {
           const SizedBox(height: 20),
           more_screen_button(
             onPressed: () {
-              if (select1 != null) {
+              if (selectedDistricts.isNotEmpty) {
                 Get.to(() => SelectTalukaScreen(
                       district1: select1!.id,
                       district2: select2?.id,
                     ));
               } else {
-                // Show a message or handle the case when no district is selected
+                // Show a message if no districts are selected
                 Get.snackbar(
                   "Error",
                   "Please select at least one district",
                   snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
                 );
               }
             },

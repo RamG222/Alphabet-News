@@ -233,9 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }).toList());
       }
-
-      // carouselNewsList =
-      //     mainNewsList.length > 5 ? mainNewsList.sublist(0, 5) : mainNewsList;
     });
 
     final response_featured =
