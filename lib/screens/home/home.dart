@@ -334,6 +334,15 @@ class _HomeScreenState extends State<HomeScreen> {
     await getNews(); // Fetch new data
   }
 
+  // increaseImpressionCount('1', '1');
+
+  void increaseImpressionCount(newsID, userID) async {
+    print('newsID ' + newsID + 'userID' + userID);
+    final _noNeed = await dio.get(
+      'https://alphabetapp.in/api/insert_views.php?newsid=$newsID&UID=$userID',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -460,7 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       // For all other indices, return the main_news_card widget
                       if (index < mainNewsList.length) {
-                        return main_news_card(data: mainNewsList[index]);
+                        return MainNewsCard(data: mainNewsList[index]);
                       }
                     }
                     return const SizedBox
