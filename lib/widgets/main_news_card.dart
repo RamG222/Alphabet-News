@@ -5,6 +5,7 @@ import 'package:alphabet/screens/view_news.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+import 'package:app_set_id/app_set_id.dart';
 
 final dio = Dio();
 
@@ -24,9 +25,11 @@ class _MainNewsCardState extends State<MainNewsCard> {
   @override
   void initState() {
     super.initState();
-    // Call the impression function when the widget is first built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      increaseImpressionCount(widget.data.newsID, '1'); // Pass your userID
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final appSetId = await AppSetId().getIdentifier();
+
+      increaseImpressionCount(
+          widget.data.newsID, appSetId!); // Pass your userID
     });
   }
 
