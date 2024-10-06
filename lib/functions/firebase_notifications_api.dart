@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:alphabet/screens/home/homepage_navigator.dart';
 import 'package:alphabet/screens/view_news.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -65,7 +66,11 @@ void handleMessage(RemoteMessage? message) {
   if (message == null) return;
 
   final data = message.data;
-  Get.off(ViewNewsScreen(url: data["news_url"]));
+  // Get.off(ViewNewsScreen(url: data["news_url"]));
+
+  Get.to(HomepageNavigator())?.then((_) {
+    Get.to(ViewNewsScreen(url: data["news_url"]));
+  });
 }
 
 // Function to show notification with image
