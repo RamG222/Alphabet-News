@@ -58,8 +58,7 @@ class _RashiScreenState extends State<RashiScreen> {
   // Method to fetch API data
   void getAPIData() async {
     try {
-      final response =
-          await _dio.get('https://alphabetapp.in/api/display_rashi.php');
+      final response = await _dio.get('$apiURL/display_rashi.php');
       var _apiAdsData = response.data['data'] as List;
 
       setState(() {

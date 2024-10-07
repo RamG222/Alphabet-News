@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:app_set_id/app_set_id.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:alphabet/constants.dart';
 
 final dio = Dio();
 
@@ -38,7 +39,7 @@ class _MainNewsCardState extends State<MainNewsCard> {
   void increaseImpressionCount(String newsID, String userID) async {
     print('Increasing impression count for newsID: $newsID, userID: $userID');
     await dio.get(
-      'https://alphabetapp.in/api/insert_views.php?newsid=$newsID&UID=$userID',
+      '$apiURL/insert_views.php?newsid=$newsID&UID=$userID',
     );
   }
 

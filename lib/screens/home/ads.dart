@@ -1,6 +1,7 @@
 //chhotya jahirati page
 // ignore_for_file: prefer_const_constructors
 
+import 'package:alphabet/constants.dart';
 import 'package:alphabet/models/short_ads_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
@@ -54,8 +55,8 @@ class _AdsState extends State<Ads> {
     String idString = idList.join(',');
 
     try {
-      final response = await _dio.get(
-          'https://alphabetapp.in/api/display_shortads.php?ctid=$idString');
+      final response =
+          await _dio.get('$apiURL/display_shortads.php?ctid=$idString');
 
       var _apiAdsData = response.data['data'] as List;
 

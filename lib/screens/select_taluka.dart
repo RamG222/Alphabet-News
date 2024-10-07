@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:alphabet/constants.dart';
 
 final _dio = Dio();
 List<TalukaModel> talukaList = [];
@@ -29,14 +30,14 @@ class _SelectTalukaScreenState extends State<SelectTalukaScreen> {
 
   void fetchTalukas() async {
     try {
-      final _response1 = await _dio.get(
-          'https://alphabetapp.in/api/display_taluka.php?DSTID=${widget.district1}');
+      final _response1 = await _dio
+          .get('$apiURL/display_taluka.php?DSTID=${widget.district1}');
       var _apiData1 = _response1.data['data'] as List?;
 
       var _apiData2 = [];
       if (widget.district2 != null) {
-        final _response2 = await _dio.get(
-            'https://alphabetapp.in/api/display_taluka.php?DSTID=${widget.district2}');
+        final _response2 = await _dio
+            .get('$apiURL/display_taluka.php?DSTID=${widget.district2}');
         _apiData2 = _response2.data['data'] as List;
       }
 

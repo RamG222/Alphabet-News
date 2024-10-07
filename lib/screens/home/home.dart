@@ -148,8 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
     String idString = idList.join(',');
 
     try {
-      final response = await dio.get(
-          'https://alphabetapp.in/api/display_ads.php?ctid=$idString&adtid=2');
+      final response =
+          await dio.get('$apiURL/display_ads.php?ctid=$idString&adtid=2');
 
       var apiAdsData = response.data['data'] as List;
 
@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getNews() async {
-    String apiUrl = '';
+    String $apiURL = '';
     await Future.delayed(const Duration(seconds: 1));
 
     List<String> idList = [
@@ -186,25 +186,25 @@ class _HomeScreenState extends State<HomeScreen> {
     if (horizontalList[int.parse(_selectedTabIndex)].isTaluka == 'true') {
       //if taluka
       setState(() {
-        apiUrl =
-            'https://alphabetapp.in/api/display_city_wise_news_pagination.php?ctid=${horizontalList[int.parse(_selectedTabIndex)].id}&page=$pagination';
+        $apiURL =
+            '$apiURL/display_city_wise_news_pagination.php?ctid=${horizontalList[int.parse(_selectedTabIndex)].id}&page=$pagination';
       });
     } else {
       // else category
       if (horizontalList[int.parse(_selectedTabIndex)].id == "1") {
         setState(() {
-          apiUrl =
-              'https://alphabetapp.in/api/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=$cityIdString&page=$pagination';
+          $apiURL =
+              '$apiURL/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=$cityIdString&page=$pagination';
         });
       } else {
         setState(() {
-          apiUrl =
-              'https://alphabetapp.in/api/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=$cityIdString&page=$pagination';
+          $apiURL =
+              '$apiURL/display_news_pagination.php?catid=${horizontalList[int.parse(_selectedTabIndex)].id}&ctid=$cityIdString&page=$pagination';
         });
       }
     }
 
-    final response = await dio.get(apiUrl);
+    final response = await dio.get($apiURL);
     var apiData2 = response.data['data'] as List;
 
     setState(() {
@@ -235,8 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
-    final response_featured =
-        await dio.get('https://alphabetapp.in/api/display_slider.php');
+    final response_featured = await dio.get('$apiURL/display_slider.php');
     setState(() {
       final apifeaturedData = response_featured.data['data'] as List;
 
@@ -260,8 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getCategories() async {
     categoryList.clear();
-    final response =
-        await dio.get('https://alphabetapp.in/api/display_category.php');
+    final response = await dio.get('$apiURL/display_category.php');
 
     var apiData = response.data['data'] as List;
 
@@ -334,8 +332,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await getNews(); // Fetch new data
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -347,8 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   _scrollController.animateTo(
                     0, // Scroll to the top
-                    duration: const Duration(
-                        milliseconds: 500), 
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut, // Scroll animation curve
                   );
                   setState(() {

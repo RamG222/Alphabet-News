@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants.dart';
 
 String? d1ID;
 String? d2ID;
@@ -53,8 +54,8 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
 
   void getAPIData() async {
     print('DistIDString' + DistIdString.toString());
-    var response = await _dio
-        .get('https://alphabetapp.in/api/display_epaper.php?did=$DistIdString');
+    var response =
+        await _dio.get('$apiURL/display_epaper.php?did=$DistIdString');
 
     var epaperData = response.data['data'] as List;
     print(epaperData);

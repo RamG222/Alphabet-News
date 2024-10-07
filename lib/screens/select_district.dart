@@ -4,6 +4,8 @@ import 'package:alphabet/widgets/more_screen_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:alphabet/constants.dart';
+
 
 final _dio = Dio();
 List<DistrictModel> districtsList = [];
@@ -28,8 +30,7 @@ class _SelectDistrictScreenState extends State<SelectDistrictScreen> {
 
   void fetchDistricts() async {
     try {
-      final response =
-          await _dio.get('https://alphabetapp.in/api/display_district.php');
+      final response = await _dio.get('$apiURL/display_district.php');
 
       var apiData = response.data['data'] as List;
 
