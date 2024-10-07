@@ -334,14 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await getNews(); // Fetch new data
   }
 
-  // increaseImpressionCount('1', '1');
 
-  void increaseImpressionCount(newsID, userID) async {
-    print('newsID ' + newsID + 'userID' + userID);
-    final _noNeed = await dio.get(
-      'https://alphabetapp.in/api/insert_views.php?newsid=$newsID&UID=$userID',
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -355,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _scrollController.animateTo(
                     0, // Scroll to the top
                     duration: const Duration(
-                        milliseconds: 500), // Duration of the scroll
+                        milliseconds: 500), 
                     curve: Curves.easeInOut, // Scroll animation curve
                   );
                   setState(() {
