@@ -66,11 +66,8 @@ void handleMessage(RemoteMessage? message) {
   if (message == null) return;
 
   final data = message.data;
-  // Get.off(ViewNewsScreen(url: data["news_url"]));
-
-  Get.to(HomepageNavigator())?.then((_) {
-    Get.to(ViewNewsScreen(url: data["news_url"]));
-  });
+  Get.to(() => HomepageNavigator());
+  Get.to(() => ViewNewsScreen(url: data["news_url"]));
 }
 
 // Function to show notification with image

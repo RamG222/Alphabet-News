@@ -2,10 +2,12 @@
 
 import 'package:alphabet/models/news_model.dart';
 import 'package:alphabet/screens/view_news.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:app_set_id/app_set_id.dart';
+import 'package:jiffy/jiffy.dart';
 
 final dio = Dio();
 
@@ -57,78 +59,105 @@ class _MainNewsCardState extends State<MainNewsCard> {
                 BeveledRectangleBorder(borderRadius: BorderRadius.circular(2)),
             color: const Color.fromARGB(236, 255, 255, 255),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Image Section
-                Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(widget.data.imageURL),
-                      fit: BoxFit.cover,
+                SizedBox(
+                  height: 200,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(2), right: Radius.circular(2)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Image.network(
+                        widget.data.imageURL,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        height: 200,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                // Title Section
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    widget.data.title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                // Additional widgets for the news content can be added here
+                SizedBox(
+                  height: 50,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    child: AutoSizeText(
+                      widget.data.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      maxLines: 2,
+                      minFontSize: 16,
+                      maxFontSize: 16,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                // News Source and Date Section
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.data.sourceName,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      child: AutoSizeText(
+                        " ${widget.data.sourceName}    ⏱️ ${Jiffy.parse(widget.data.publishDate).fromNow()}",
+                        style: const TextStyle(color: Colors.grey),
+                        minFontSize: 12,
+                        maxFontSize: 12,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Text(
-                        widget.data.publishDate,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Transform.translate(
+                          offset: const Offset(35, 0),
+                          child: InkWell(
+                            onTap: () {},
+                            child: Image.asset(
+                              'assets/whatsapp.png',
+                              height: 30,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Views Count Section
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.remove_red_eye,
-                          size: 16, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${widget.data.views} views',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                        Transform.translate(
+                          offset: const Offset(20, 0),
+                          child: const IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              Icons.remove_red_eye_outlined,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                        Transform.translate(
+                          offset: const Offset(10, 0),
+                          child: InkWell(
+                            onTap: () {},
+                            child: Text(
+                              widget.data.views,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.more_vert_outlined,
+                            size: 25,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
               ],
             ),
           ),
