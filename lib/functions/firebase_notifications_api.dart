@@ -66,7 +66,7 @@ void handleMessage(RemoteMessage? message) {
   if (message == null) return;
 
   final data = message.data;
-  Get.to(() => HomepageNavigator());
+  Get.offAll(() => HomepageNavigator());
   Get.to(() => ViewNewsScreen(url: data["news_url"]));
 }
 
