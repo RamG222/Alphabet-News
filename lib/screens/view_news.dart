@@ -1,5 +1,7 @@
 import 'package:alphabet/constants.dart';
+import 'package:alphabet/screens/home/homepage_navigator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -159,20 +161,26 @@ class _ViewNewsScreenState extends State<ViewNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            Expanded(
-              child: WebViewWidget(controller: controller),
-            ),
-            if (bannerAd2 != null) // Check if the second banner ad is loaded
-              SizedBox(
-                height: 50,
-                child: AdWidget(ad: bannerAd2!),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offAll(() => HomepageNavigator());
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: [
+              Expanded(
+                child: WebViewWidget(controller: controller),
               ),
-          ],
+              if (bannerAd2 != null) // Check if the second banner ad is loaded
+                SizedBox(
+                  height: 50,
+                  child: AdWidget(ad: bannerAd2!),
+                ),
+            ],
+          ),
         ),
       ),
     );
