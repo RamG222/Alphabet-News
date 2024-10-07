@@ -8,10 +8,9 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-
 android {
     namespace = "com.stormsofts.alphabetnews"
-    compileSdk = flutter.compileSdkVersion
+    compileSdkVersion 34  // Use the actual compileSdkVersion (33 is typical for newer apps)
     ndkVersion = "26.1.10909125"
 
     compileOptions {
@@ -20,7 +19,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:deprecation"
+        options.compilerArgs << "-Xlint:deprecation"
     }
 
     dependencies {
@@ -33,10 +32,10 @@ android {
 
     defaultConfig {
         applicationId = "com.stormsofts.alphabetnews" 
-        minSdk = 21
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdkVersion 21  // Use minSdkVersion explicitly
+        targetSdkVersion 33  // Use the actual targetSdkVersion
+        versionCode flutter.versionCode
+        versionName flutter.versionName
         multiDexEnabled true
     }
 
