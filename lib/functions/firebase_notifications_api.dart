@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:alphabet/screens/home/homepage_navigator.dart';
 import 'package:alphabet/screens/view_news.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -28,8 +27,8 @@ Future<void> setupPushNotifications() async {
     sound: true,
   );
 
-  final token = await fcm.getToken();
-  print("FCM Token: $token");
+  await fcm.getToken();
+
   fcm.subscribeToTopic("ALL");
 
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
@@ -57,9 +56,7 @@ Future<void> initLocalNotification() async {
 }
 
 // Function to handle background messages
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('Background Message: ${message.notification?.title}');
-}
+Future<void> handleBackgroundMessage(RemoteMessage message) async {}
 
 // Function for handling notifications
 void handleMessage(RemoteMessage? message) {
@@ -75,9 +72,6 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
   if (notification == null) return;
 
   final imageUrl = message.data['image_url'];
-  print('Notification Title: ${notification.title}');
-  print('Notification Body: ${notification.body}');
-  print('Image URL: $imageUrl');
 
   Uint8List? bigPicture;
   if (imageUrl != null) {
@@ -85,11 +79,9 @@ Future<void> _showNotificationWithImage(RemoteMessage message) async {
       final response = await http.get(Uri.parse(imageUrl));
       if (response.statusCode == 200) {
         bigPicture = response.bodyBytes;
-      } else {
-        print('Failed to fetch image. Status code: ${response.statusCode}');
-      }
+      } else {}
     } catch (e) {
-      print('Error fetching notification image: $e');
+      Get.snackbar('Error fetching notification image,', '$e');
     }
   }
 

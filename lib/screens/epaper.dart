@@ -37,10 +37,9 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
       d2ID = pref.getString('district2');
     });
     String combinedIDs;
-    print('d1ID: $d1ID, d2ID: $d2ID');
 
     if (d2ID != null && d2ID!.isNotEmpty) {
-      combinedIDs = '${d1ID ?? 'null'},${d2ID}';
+      combinedIDs = '${d1ID ?? 'null'},$d2ID';
     } else {
       combinedIDs = d1ID ?? 'null2';
     }
@@ -53,12 +52,10 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
   }
 
   void getAPIData() async {
-    print('DistIDString' + DistIdString.toString());
     var response =
         await _dio.get('$apiURL/display_epaper.php?did=$DistIdString');
 
     var epaperData = response.data['data'] as List;
-    print(epaperData);
 
     setState(() {
       epaperList = epaperData.map((item) {
@@ -83,17 +80,17 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
             : ListView.builder(
                 itemCount: epaperList.length,
                 itemBuilder: (context, index) {
-                  var _data = epaperList[index];
+                  var data = epaperList[index];
                   return InkWell(
                     onTap: () {
-                      Get.to(() => ViewNewsScreen(url: _data.epaperLink));
+                      Get.to(() => ViewNewsScreen(url: data.epaperLink));
                     },
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.network(
-                            _data.logo.toString(),
+                            data.logo.toString(),
                             height: 70,
                             width: 80,
                             fit: BoxFit.fill,
@@ -105,7 +102,7 @@ class _EpaperScreeenState extends State<EpaperScreeen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _data.name,
+                              data.name,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text('Read News by clicking here'),

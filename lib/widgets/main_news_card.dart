@@ -37,7 +37,6 @@ class _MainNewsCardState extends State<MainNewsCard> {
   }
 
   void increaseImpressionCount(String newsID, String userID) async {
-    print('Increasing impression count for newsID: $newsID, userID: $userID');
     await dio.get(
       '$apiURL/insert_views.php?newsid=$newsID&UID=$userID',
     );

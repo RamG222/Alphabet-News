@@ -58,10 +58,10 @@ class _AdsState extends State<Ads> {
       final response =
           await _dio.get('$apiURL/display_shortads.php?ctid=$idString');
 
-      var _apiAdsData = response.data['data'] as List;
+      var apiAdsData = response.data['data'] as List;
 
       setState(() {
-        shortAdsList = _apiAdsData.map((item) {
+        shortAdsList = apiAdsData.map((item) {
           return ShortAdsModel(
             id: item['SAID'],
             title: item['AdTitle'],
@@ -98,8 +98,8 @@ class _AdsState extends State<Ads> {
             Expanded(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  var _data = shortAdsList[index];
-                  return ads_card_widget(data: _data);
+                  var data = shortAdsList[index];
+                  return ads_card_widget(data: data);
                 },
                 itemCount: shortAdsList.length,
                 separatorBuilder: (context, index) {
@@ -114,6 +114,7 @@ class _AdsState extends State<Ads> {
   }
 }
 
+// ignore: camel_case_types
 class ads_card_widget extends StatelessWidget {
   const ads_card_widget({
     super.key,
