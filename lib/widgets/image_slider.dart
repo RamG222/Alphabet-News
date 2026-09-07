@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_slider/carousel.dart';
 import 'package:get/get.dart';
 
-class image_slider extends StatelessWidget {
-  const image_slider({
+class ImageSlider extends StatelessWidget {
+  const ImageSlider({
     super.key,
   });
 

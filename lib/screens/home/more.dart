@@ -1,4 +1,4 @@
-import 'package:alphabet/screens/Terms_conditions.dart';
+import 'package:alphabet/screens/terms_conditions.dart';
 import 'package:alphabet/screens/contact.dart';
 import 'package:alphabet/screens/epaper.dart';
 import 'package:alphabet/screens/privacy_policy.dart';
@@ -35,7 +35,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.newspaper_outlined),
                   label: 'E-Paper',
                   onPressed: () {
@@ -44,14 +44,14 @@ class _MoreScreenState extends State<MoreScreen> {
                     );
                   },
                 ),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.settings_outlined),
                   label: 'Change Taluka and District',
                   onPressed: () {
                     Get.to(SelectDistrictScreen());
                   },
                 ),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.share_outlined),
                   label: 'Share App',
                   onPressed: () {
@@ -65,21 +65,21 @@ class _MoreScreenState extends State<MoreScreen> {
             ),
             Column(
               children: [
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.privacy_tip_outlined),
                   label: 'Privacy Policy',
                   onPressed: () {
                     Get.to(() => PrivacyPolicyScreen());
                   },
                 ),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.assignment_turned_in_outlined),
                   label: 'Terms & Conditions',
                   onPressed: () {
                     Get.to(() => TermsConditionsScreen());
                   },
                 ),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.assignment_turned_in_outlined),
                   label: 'FAQ',
                   onPressed: () {
@@ -89,7 +89,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     );
                   },
                 ),
-                more_screen_button(
+                MoreScreenButton(
                   iconWidget: Icon(Icons.assignment_turned_in_outlined),
                   label: 'Contact Us',
                   onPressed: () {

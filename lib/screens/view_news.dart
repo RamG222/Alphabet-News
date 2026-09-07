@@ -161,10 +161,11 @@ class _ViewNewsScreenState extends State<ViewNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         Get.offAll(() => HomepageNavigator());
-        return false;
       },
       child: SafeArea(
         child: Scaffold(

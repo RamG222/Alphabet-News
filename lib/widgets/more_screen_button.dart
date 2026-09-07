@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class more_screen_button extends StatelessWidget {
-  const more_screen_button({
+class MoreScreenButton extends StatelessWidget {
+  const MoreScreenButton({
     super.key,
     required this.onPressed,
     required this.iconWidget,

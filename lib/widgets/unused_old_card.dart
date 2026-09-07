@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
 
-class old_card extends StatelessWidget {
-  const old_card({
+class OldCard extends StatelessWidget {
+  const OldCard({
     super.key,
   });
 

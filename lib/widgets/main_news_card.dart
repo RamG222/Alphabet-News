@@ -21,7 +21,7 @@ class MainNewsCard extends StatefulWidget {
   final NewsModel data;
 
   @override
-  _MainNewsCardState createState() => _MainNewsCardState();
+  State<MainNewsCard> createState() => _MainNewsCardState();
 }
 
 class _MainNewsCardState extends State<MainNewsCard> {

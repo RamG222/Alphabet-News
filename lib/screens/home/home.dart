@@ -371,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? const SizedBox(height: 300)
                     : const SizedBox(
                         height: 300,
-                        child: image_slider(),
+                        child: ImageSlider(),
                       ),
               ),
 

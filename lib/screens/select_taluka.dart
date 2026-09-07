@@ -30,19 +30,19 @@ class _SelectTalukaScreenState extends State<SelectTalukaScreen> {
 
   void fetchTalukas() async {
     try {
-      final _response1 = await _dio
+      final response1 = await _dio
           .get('$apiURL/display_taluka.php?DSTID=${widget.district1}');
-      var _apiData1 = _response1.data['data'] as List?;
+      var apiData1 = response1.data['data'] as List?;
 
-      var _apiData2 = [];
+      var apiData2 = [];
       if (widget.district2 != null) {
-        final _response2 = await _dio
+        final response2 = await _dio
             .get('$apiURL/display_taluka.php?DSTID=${widget.district2}');
-        _apiData2 = _response2.data['data'] as List;
+        apiData2 = response2.data['data'] as List;
       }
 
-      List<TalukaModel> talukaFrom1 = _apiData1 != null
-          ? _apiData1.map((item) {
+      List<TalukaModel> talukaFrom1 = apiData1 != null
+          ? apiData1.map((item) {
               return TalukaModel(
                 name: item['Taluka'],
                 id: item['TLID'],
@@ -50,7 +50,7 @@ class _SelectTalukaScreenState extends State<SelectTalukaScreen> {
             }).toList()
           : [];
 
-      List<TalukaModel> talukaFrom2 = _apiData2.map((item) {
+      List<TalukaModel> talukaFrom2 = apiData2.map((item) {
         return TalukaModel(
           name: item['Taluka'],
           id: item['TLID'],
@@ -151,7 +151,7 @@ class _SelectTalukaScreenState extends State<SelectTalukaScreen> {
                   ),
                 ),
           const SizedBox(height: 20),
-          more_screen_button(
+          MoreScreenButton(
               onPressed: () async {
                 SharedPreferences pref = await SharedPreferences.getInstance();
 
