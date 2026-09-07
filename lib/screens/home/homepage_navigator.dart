@@ -60,7 +60,7 @@ class _HomepageNavigatorState extends State<HomepageNavigator> {
         data: NavigationBarThemeData(
           backgroundColor: Colors.white,
           indicatorColor: const Color.fromARGB(255, 0, 174, 255)
-              .withOpacity(0.2), // Subtle highlight for selected item
+              .withValues(alpha: 0.2), // Subtle highlight for selected item
           labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
             (Set<WidgetState> states) {
               if (states.contains(WidgetState.selected)) {

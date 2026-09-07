@@ -58,10 +58,10 @@ class _RashiScreenState extends State<RashiScreen> {
   void getAPIData() async {
     try {
       final response = await _dio.get('$apiURL/display_rashi.php');
-      var _apiAdsData = response.data['data'] as List;
+      var apiAdsData = response.data['data'] as List;
 
       setState(() {
-        rashi = _apiAdsData.map((item) {
+        rashi = apiAdsData.map((item) {
           return RashiModel(
             id: item['RSHID'],
             name: item['Rashi'],
@@ -134,7 +134,7 @@ class _RashiScreenState extends State<RashiScreen> {
                           scrollDirection: Axis.horizontal,
                           itemCount: rashi.length,
                           itemBuilder: (context, index) {
-                            var _data = rashi[index];
+                            var data = rashi[index];
                             return InkWell(
                               onTap: () {
                                 setState(() {
@@ -143,7 +143,7 @@ class _RashiScreenState extends State<RashiScreen> {
 
                                   selectedIndex =
                                       index; // Update the selected index
-                                  selectedDescription = _data
+                                  selectedDescription = data
                                       .description; // Update description on tap
                                 });
                               },
@@ -157,7 +157,7 @@ class _RashiScreenState extends State<RashiScreen> {
                                             255, 232, 231, 231),
                                         padding: const EdgeInsets.all(12.0),
                                         child: AutoSizeText(
-                                          _data.name,
+                                          data.name,
                                           style: TextStyle(
                                             fontSize: 25,
                                             color: selectedIndex == index
